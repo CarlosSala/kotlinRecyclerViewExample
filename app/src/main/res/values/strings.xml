@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RecyclerViewExample</string>
+    <string name="superhero">My superhero</string>
+    <string name="superhero_real_name">Mario Ruiz</string>
+    <string name="superhero_publisher">Flow Factory</string>
+    <string name="todo">generic description</string>
+</resources>

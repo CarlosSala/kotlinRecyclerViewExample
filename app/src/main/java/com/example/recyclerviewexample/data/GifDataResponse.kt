@@ -1,7 +1,6 @@
 package com.example.recyclerviewexample.data
 
 import com.google.gson.annotations.SerializedName
-import java.util.Objects
 
 
 data class GifDataResponse(

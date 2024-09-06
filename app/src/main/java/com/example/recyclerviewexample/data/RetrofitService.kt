@@ -13,7 +13,7 @@ interface RetrofitService {
     @GET(
         "search?api_key=${API_KEY}&offset=0&rating=g&lang=es&bundle=low_bandwidth"
     )
-    suspend fun getGifs(@Query("q") name: String, @Query("limit") limit: String): GifDataResponse
+    suspend fun getGifs(@Query("q") typeOfGif: String, @Query("limit") limit: String): GifDataResponse
 
 
     object RetrofitServiceFactory {

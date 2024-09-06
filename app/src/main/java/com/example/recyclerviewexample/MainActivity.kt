@@ -3,13 +3,14 @@ package com.example.recyclerviewexample
 import android.graphics.Canvas
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerviewexample.data.ItemGif
+import com.example.recyclerviewexample.data.RetrofitService
 import com.example.recyclerviewexample.databinding.ActivityMainBinding
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.Collections
@@ -19,12 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var myAdapter: GifAdapter
-
-    /*    private val viewModel: MainViewModel by viewModels() {
-         MainViewModel.MainViewModelFactory(emptyList())
-     }*/
-    private val viewModel: MainViewModel by viewModels()
-
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +28,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.gifs.observe(this@MainActivity) {
+        val retrofitService = RetrofitService.RetrofitServiceFactory.makeRetrofitService()
 
-            initRecyclerView(it)
-            customRecyclerView(it)
+        val viewModelFactory = MainViewmodelFactory(retrofitService)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+
+        viewModel.loadGifs("laugh")
+
+        viewModel.gifs.observe(this@MainActivity) { gifs ->
+
+            initRecyclerView(gifs)
+            customRecyclerView(gifs)
         }
     }
 
-    private fun initRecyclerView(gifs: MutableList<ItemGif>) {
+    private fun initRecyclerView(gifs: List<ItemGif>) {
 
-        binding.rvSuperhero.layoutManager = LinearLayoutManager(this)
+        binding.rvGif.layoutManager = LinearLayoutManager(this)
 
         myAdapter = GifAdapter(gifs) { gif ->
             onItemSelected(
@@ -49,10 +52,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        binding.rvSuperhero.adapter = myAdapter
+        binding.rvGif.adapter = myAdapter
     }
 
-    private fun customRecyclerView(itemGifList: MutableList<ItemGif>) {
+    private fun customRecyclerView(itemGifList: List<ItemGif>) {
 
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(
@@ -75,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 myAdapter.deleteItem(viewHolder.bindingAdapterPosition)
-
             }
 
             // external dependency
@@ -120,11 +122,10 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        itemTouchHelper.attachToRecyclerView(binding.rvSuperhero)
+        itemTouchHelper.attachToRecyclerView(binding.rvGif)
     }
 
-    private fun onItemSelected(superhero: ItemGif) {
-
-        Toast.makeText(this, superhero.title, Toast.LENGTH_LONG).show()
+    private fun onItemSelected(gif: ItemGif) {
+        Toast.makeText(this, gif.title, Toast.LENGTH_LONG).show()
     }
 }

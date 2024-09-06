@@ -1,47 +1,57 @@
 package com.example.recyclerviewexample
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.recyclerviewexample.data.GifDataResponse
 import com.example.recyclerviewexample.data.ItemGif
 import com.example.recyclerviewexample.data.RetrofitService
 import kotlinx.coroutines.launch
 
-// the app logic goes here, and ui only print the info in the screen
-// architecture component: for example ViewModel
-// if we rotate the screen, the viewModel stays stable
+class MainViewModel(
+    private val service: RetrofitService
+) : ViewModel() {
 
-// class MainViewModel(anyData: List<Any>) : ViewModel() {
-class MainViewModel() : ViewModel() {
+    private val _gifs = MutableLiveData<List<ItemGif>>()
+    val gifs: LiveData<List<ItemGif>> get() = _gifs
 
-    private val service = RetrofitService.RetrofitServiceFactory.makeRetrofitService()
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
-    // it the viewModel receive args, this need a factory to generate a viewModel
-    /*    class MainViewModelFactory(private val anyData: List<Any>) : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T{
-                return MainViewModel(anyData) as T
-            }
-        }*/
-    /*
-        private val _loading = MutableLiveData(false)
-        val loading: LiveData<ItemGif> get() = _loading*/
-
-    private val _gifs = MutableLiveData<MutableList<ItemGif>>()
-    val gifs: MutableLiveData<MutableList<ItemGif>> get() = _gifs
-
-    init {
+    fun loadGifs(typeOfGif: String) {
+        _isLoading.value = true
         viewModelScope.launch {
-
-            val myResponse: GifDataResponse = service.getGifs("laugh", "25")
-
-            if (myResponse.metaResponse.status == 200) {
-
-                _gifs.value = myResponse.dataResponse
-
+            try {
+                val response: GifDataResponse = service.getGifs(typeOfGif, "25")
+                if (response.metaResponse.status == 200) {
+                    _gifs.postValue(response.dataResponse)
+                    _error.postValue(null) // clean previews errors
+                } else {
+                    _error.postValue("Gifs couldn't be loaded: ${response.metaResponse.msg}")
+                }
+            } catch (e: Exception) {
+                _error.postValue("Error de red: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
             }
         }
     }
+}
 
+@Suppress("UNCHECKED_CAST")
+class MainViewmodelFactory(
+    private val service: RetrofitService
+) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(service) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

@@ -11,7 +11,7 @@ class GifViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemGifBinding.bind(view)
 
     // this function is called for each item of recyclerview
-    fun render(itemGif: ItemGif, onClicklistener: (ItemGif) -> Unit) {
+    fun render(itemGif: ItemGif, onItemGifClickListener: (ItemGif) -> Unit) {
 
         binding.tvGif.text = itemGif.title
         binding.tvRealName.text = itemGif.gifId
@@ -20,13 +20,7 @@ class GifViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             .into(binding.ivGif)
 
         itemView.setOnClickListener {
-            onClicklistener(itemGif)
+            onItemGifClickListener(itemGif)
         }
-
-        // it is all cell
-        /*   itemView.setOnClickListener {
-               Toast.makeText(binding.ivSuperhero.context, superhero.realName, Toast.LENGTH_LONG)
-                   .show()
-           }*/
     }
 }

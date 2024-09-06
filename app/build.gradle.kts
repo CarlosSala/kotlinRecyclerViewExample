@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,6 +10,10 @@ android {
     namespace = "com.example.recyclerviewexample"
     compileSdk = 34
 
+    val file = rootProject.file("apiKey.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(file))
+
     defaultConfig {
         applicationId = "com.example.recyclerviewexample"
         minSdk = 24
@@ -15,6 +22,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "API_KEY_SAFE",
+            properties.getProperty("API_KEY")
+        )
     }
 
     buildTypes {
@@ -33,7 +46,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     viewBinding {
         enable = true
     }

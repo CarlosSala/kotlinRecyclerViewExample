@@ -1,11 +1,12 @@
 package com.example.recyclerviewexample.data
 
+import com.example.recyclerviewexample.BuildConfig.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val API_KEY: String = "xtxK5EbC5IYtG2xqePy55bifQPGnTvfq"
+const val API_KEY: String = API_KEY_SAFE
 const val BASE_URL: String = "https://api.giphy.com/v1/gifs/"
 
 interface RetrofitService {

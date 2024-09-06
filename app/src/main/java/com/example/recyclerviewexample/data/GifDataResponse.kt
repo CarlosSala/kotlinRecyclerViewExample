@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 
 data class GifDataResponse(
-
     @SerializedName("data") val dataResponse: MutableList<ItemGif>,
     @SerializedName("meta") val metaResponse: Meta
 )

@@ -1,9 +1,9 @@
-package com.example.recyclerviewexample.data
+package com.example.recyclerviewexample.data.model
 
 import com.google.gson.annotations.SerializedName
 
 
-data class GifDataResponse(
+data class GifDto(
     @SerializedName("data") val dataResponse: MutableList<ItemGif>,
     @SerializedName("meta") val metaResponse: Meta
 )

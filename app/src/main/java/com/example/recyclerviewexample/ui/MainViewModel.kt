@@ -43,7 +43,7 @@ class MainViewModel(
         }
     }
 
-/*    fun moveItem(fromPosition: Int, toPosition: Int) {
+    fun moveItem(fromPosition: Int, toPosition: Int) {
         _gifs.update { currentList ->
             val newList = currentList.toMutableList()
             val item = newList.removeAt(fromPosition)
@@ -58,7 +58,7 @@ class MainViewModel(
             newList.removeAt(position)
             newList
         }
-    }*/
+    }
 
     fun deleteItem(itemToDelete: ItemGif) {
         _gifs.update { currentList ->

@@ -12,18 +12,11 @@ class GifDiffUtil(
 
     override fun getNewListSize() = newList.size
 
-    override fun areItemsTheSame(
-        oldItemPosition: Int,
-        newItemPosition: Int
-    ): Boolean {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].gifId == newList[newItemPosition].gifId
     }
 
-    override fun areContentsTheSame(
-        oldItemPosition: Int,
-        newItemPosition: Int
-    ): Boolean {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
-
 }

@@ -37,32 +37,29 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainViewmodelFactory(giftApiService)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
-        viewModel.loadGifs("laugh")
-
-        setupItemTouchHelper()
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.gifs.collect { gifs ->
-                    setupRecyclerView(gifs)
-                }
-            }
-
-            if (savedInstanceState == null) {
-                viewModel.loadGifs("laugh")
-            }
-        }
-    }
-
-    private fun setupRecyclerView(gifs: List<ItemGif>) {
-
-        gifAdapter = GifAdapter(gifs) { gif ->
+        gifAdapter = GifAdapter(emptyList()) { gif ->
             onItemSelected(gif)
         }
 
         binding.rvGif.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = gifAdapter
+        }
+
+        setupItemTouchHelper()
+
+        viewModel.loadGifs("laugh")
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.gifs.collect { gifs ->
+                    gifAdapter.updateList(gifs)
+                }
+            }
+
+            if (savedInstanceState == null) {
+                viewModel.loadGifs("laugh")
+            }
         }
     }
 
@@ -81,25 +78,25 @@ class MainActivity : AppCompatActivity() {
                 val sourcePosition = viewHolder.bindingAdapterPosition
                 val targetPosition = target.bindingAdapterPosition
 
-
                 if (sourcePosition == RecyclerView.NO_POSITION || targetPosition == RecyclerView.NO_POSITION) {
                     return false
                 }
-                // Collections.swap(itemGifList, sourcePosition, targetPosition)
-                // viewModel.moveItem(sourcePosition, targetPosition)
-                gifAdapter.notifyItemMoved(sourcePosition, targetPosition)
+                viewModel.moveItem(sourcePosition, targetPosition)
+                // gifAdapter.notifyItemMoved(sourcePosition, targetPosition)
                 return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
                 val position = viewHolder.bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
 
-                    //  viewModel.deleteItemAt(position)
-                    gifAdapter.notifyItemRemoved(position)
+                    val itemToDelete = gifAdapter.getItemAt(position)
+
+                    if (itemToDelete != null) {
+                        viewModel.deleteItem(itemToDelete)
+                    }
+                    // gifAdapter.notifyItemRemoved(position)
                 }
-                // myAdapter.deleteItem(viewHolder.bindingAdapterPosition)
             }
 
             // external dependency
@@ -112,7 +109,6 @@ class MainActivity : AppCompatActivity() {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-
                 RecyclerViewSwipeDecorator.Builder(
                     c,
                     recyclerView,
@@ -126,7 +122,6 @@ class MainActivity : AppCompatActivity() {
                         this@MainActivity, R.color.my_red
                     )
                 )
-
                     .addActionIcon(R.drawable.baseline_delete_24)
                     .create()
                     .decorate()

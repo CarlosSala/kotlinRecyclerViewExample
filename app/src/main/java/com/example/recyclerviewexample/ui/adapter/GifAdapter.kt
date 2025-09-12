@@ -14,7 +14,8 @@ class GifAdapter(
     RecyclerView.Adapter<GifViewHolder>() {
 
     fun updateList(newList: List<ItemGif>) {
-        val gifDiffUtil = GifDiffUtil(itemGifList, newList)
+
+        val gifDiffUtil = GifDiffUtil(oldList = itemGifList, newList = newList)
         val result = DiffUtil.calculateDiff(gifDiffUtil)
         itemGifList = newList
         result.dispatchUpdatesTo(this)
@@ -36,22 +37,10 @@ class GifAdapter(
 
     override fun getItemCount() = itemGifList.size
 
-
-    // is the number of item that rv will show in the screen
-    // override fun getItemCount(): Int = mutableItemGif.size
-
-    /* fun deleteItem(adapterPosition: Int) {
-
-         mutableItemGif.removeAt(adapterPosition)
-         notifyItemRemoved(adapterPosition)
-     }*/
-
-    /* fun getItemAt(position: Int): ItemGif? {
-         return if (position >= 0 && position < currentList.size) {
-             getItem(position)
-         } else {
-             null
-         }
-
-     }*/
+    fun getItemAt(position: Int): ItemGif? {
+        if (position < 0 || position >= itemGifList.size) {
+            null
+        }
+        return itemGifList[position]
+    }
 }

@@ -5,14 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.recyclerviewexample.data.model.GifDto
 import com.example.recyclerviewexample.data.model.ItemGif
-import com.example.recyclerviewexample.data.network.GiftApiService
+import com.example.recyclerviewexample.data.network.RetrofitHelper
+import com.example.recyclerviewexample.domain.usecases.GetGifsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val service: GiftApiService
+    private val getGifsUseCase: GetGifsUseCase,
 ) : ViewModel() {
 
     private val _gifs = MutableStateFlow<List<ItemGif>>(listOf())
@@ -28,7 +29,7 @@ class MainViewModel(
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val response: GifDto = service.getGifs(typeOfGif, "25")
+                val response: GifDto = getGifsUseCase(typeOfGif = typeOfGif, limit = "25")
                 if (response.metaResponse.status == 200) {
                     _gifs.value = (response.dataResponse)
                     _error.value = (null) // clean previews errors
@@ -70,13 +71,12 @@ class MainViewModel(
 }
 
 @Suppress("UNCHECKED_CAST")
-class MainViewmodelFactory(
-    private val service: GiftApiService
-) : ViewModelProvider.Factory {
-
+class MainViewmodelFactory() : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(service) as T
+            val giftApiService = RetrofitHelper.getInstanceRetrofit()
+            val getGifsUseCase = GetGifsUseCase(giftApiService)
+            return MainViewModel(getGifsUseCase = getGifsUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

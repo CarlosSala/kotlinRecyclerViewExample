@@ -12,11 +12,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recyclerviewexample.ui.adapter.GifAdapter
 import com.example.recyclerviewexample.R
 import com.example.recyclerviewexample.data.model.ItemGif
-import com.example.recyclerviewexample.data.network.RetrofitHelper
 import com.example.recyclerviewexample.databinding.ActivityMainBinding
+import com.example.recyclerviewexample.ui.adapter.GifAdapter
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.launch
 
@@ -32,9 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val giftApiService = RetrofitHelper.getInstanceRetrofit()
-
-        val viewModelFactory = MainViewmodelFactory(giftApiService)
+        val viewModelFactory = MainViewmodelFactory()
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         gifAdapter = GifAdapter(emptyList()) { gif ->

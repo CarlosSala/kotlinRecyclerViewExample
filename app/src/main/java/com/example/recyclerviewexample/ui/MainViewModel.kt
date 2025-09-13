@@ -9,6 +9,7 @@ import com.example.recyclerviewexample.data.model.ItemGif
 import com.example.recyclerviewexample.data.network.RetrofitHelper
 import com.example.recyclerviewexample.data.repository.GifsRepositoryImpl
 import com.example.recyclerviewexample.domain.usecases.GetGifsUseCase
+import com.example.recyclerviewexample.ui.model.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -18,56 +19,50 @@ class MainViewModel(
     private val getGifsUseCase: GetGifsUseCase,
 ) : ViewModel() {
 
-    private val _gifs = MutableStateFlow<List<ItemGif>>(listOf())
-    val gifs: StateFlow<List<ItemGif>> get() = _gifs
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
-
-    private val _error = MutableStateFlow<String?>("")
-    val error: StateFlow<String?> get() = _error
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> get() = _uiState
 
     fun loadGifs(typeOfGif: String) {
-        _isLoading.value = true
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
                 val response: GifDto = getGifsUseCase(typeOfGif = typeOfGif, limit = "25")
                 if (response.metaResponse.status == 200) {
-                    _gifs.value = (response.dataResponse)
-                    _error.value = (null) // clean previews errors
+                    _uiState.update { it.copy(gifList = response.dataResponse) }
                 } else {
-                    _error.value = ("Gifs couldn't be loaded: ${response.metaResponse.msg}")
+                    _uiState.update { it.copy(error = response.metaResponse.msg) }
                 }
             } catch (e: Exception) {
-                _error.value = ("Error de red: ${e.message}")
+                _uiState.update { it.copy(error = e.message) }
             } finally {
-                _isLoading.value = false
+                _uiState.update { it.copy(success = "Success") }
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
 
     fun moveItem(fromPosition: Int, toPosition: Int) {
-        _gifs.update { currentList ->
-            val newList = currentList.toMutableList()
+        _uiState.update { uiState ->
+            val newList = uiState.gifList.toMutableList()
             val item = newList.removeAt(fromPosition)
             newList.add(toPosition, item)
-            newList
+            uiState.copy(gifList = newList)
         }
     }
 
-    fun deleteItemAt(position: Int) {
-        _gifs.update { currentList ->
-            val newList = currentList.toMutableList()
-            newList.removeAt(position)
-            newList
-        }
-    }
+    /*   fun deleteItemAt(position: Int) {
+           _gifs.update { currentList ->
+               val newList = currentList.toMutableList()
+               newList.removeAt(position)
+               newList
+           }
+       }*/
 
     fun deleteItem(itemToDelete: ItemGif) {
-        _gifs.update { currentList ->
-            val newList = currentList.toMutableList()
+        _uiState.update { uiState ->
+            val newList = uiState.gifList.toMutableList()
             newList.remove(itemToDelete)
-            newList
+            uiState.copy(gifList = newList)
         }
     }
 }

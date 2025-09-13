@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.gifs.collect { gifs ->
-                    gifAdapter.updateList(gifs)
+                viewModel.uiState.collect { uiState ->
+                    gifAdapter.updateList(uiState.gifList)
                 }
             }
 

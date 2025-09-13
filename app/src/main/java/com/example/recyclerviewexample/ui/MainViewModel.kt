@@ -3,9 +3,11 @@ package com.example.recyclerviewexample.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.recyclerviewexample.data.datasource.remote.GifsRemoteDataSourceImpl
 import com.example.recyclerviewexample.data.model.GifDto
 import com.example.recyclerviewexample.data.model.ItemGif
 import com.example.recyclerviewexample.data.network.RetrofitHelper
+import com.example.recyclerviewexample.data.repository.GifsRepositoryImpl
 import com.example.recyclerviewexample.domain.usecases.GetGifsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -75,7 +77,9 @@ class MainViewmodelFactory() : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             val giftApiService = RetrofitHelper.getInstanceRetrofit()
-            val getGifsUseCase = GetGifsUseCase(giftApiService)
+            val gifsRemoteDataSourceImpl = GifsRemoteDataSourceImpl(giftApiService)
+            val gifsRepositoryImpl = GifsRepositoryImpl(gifsRemoteDataSourceImpl)
+            val getGifsUseCase = GetGifsUseCase(gifsRepositoryImpl)
             return MainViewModel(getGifsUseCase = getGifsUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

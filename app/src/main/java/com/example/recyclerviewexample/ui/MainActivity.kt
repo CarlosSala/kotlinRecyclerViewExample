@@ -2,9 +2,11 @@ package com.example.recyclerviewexample.ui
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +18,7 @@ import com.example.recyclerviewexample.R
 import com.example.recyclerviewexample.data.model.ItemGif
 import com.example.recyclerviewexample.databinding.ActivityMainBinding
 import com.example.recyclerviewexample.ui.adapter.GifAdapter
+import com.example.recyclerviewexample.ui.UiState
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.launch
 
@@ -50,7 +53,22 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    gifAdapter.updateList(uiState.gifList)
+
+                    when (uiState) {
+                        is UiState.Error -> {
+
+                        }
+
+                        UiState.Loading -> {
+                            binding.pbLoading.isVisible = true
+                        }
+
+                        is UiState.Success -> {
+                            binding.pbLoading.isVisible = false
+                            gifAdapter.updateList(uiState.gifList)
+                        }
+                    }
+
                 }
             }
 

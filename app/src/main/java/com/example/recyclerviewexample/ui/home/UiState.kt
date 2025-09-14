@@ -1,4 +1,4 @@
-package com.example.recyclerviewexample.ui
+package com.example.recyclerviewexample.ui.home
 
 import com.example.recyclerviewexample.ui.model.ItemGif
 

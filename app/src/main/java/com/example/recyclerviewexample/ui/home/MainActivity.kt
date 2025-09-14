@@ -1,7 +1,8 @@
-package com.example.recyclerviewexample.ui
+package com.example.recyclerviewexample.ui.home
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -53,20 +54,10 @@ class MainActivity : AppCompatActivity() {
                 viewModel.uiState.collect { uiState ->
 
                     when (uiState) {
-                        is UiState.Error -> {
-
-                        }
-
-                        UiState.Loading -> {
-                            binding.pbLoading.isVisible = true
-                        }
-
-                        is UiState.Success -> {
-                            binding.pbLoading.isVisible = false
-                            gifAdapter.updateList(uiState.gifList)
-                        }
+                        is UiState.Error -> errorState(uiState)
+                        is UiState.Loading -> loadingState()
+                        is UiState.Success -> successState(uiState)
                     }
-
                 }
             }
 
@@ -74,6 +65,26 @@ class MainActivity : AppCompatActivity() {
                 viewModel.loadGifs("laugh")
             }
         }
+    }
+
+
+    fun loadingState() {
+        binding.pbLoading.isVisible = true
+    }
+
+    fun errorState(uiState: UiState.Error) {
+        binding.pbLoading.isVisible = false
+        Log.e("MainActivity", "Error State: ${uiState.error}")
+        Toast.makeText(
+            this@MainActivity,
+            "Error: ${uiState.error}",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    fun successState(uiState: UiState.Success) {
+        binding.pbLoading.isVisible = false
+        gifAdapter.updateList(uiState.gifList)
     }
 
     private fun setupItemTouchHelper() {
@@ -86,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                target: RecyclerView.ViewHolder,
             ): Boolean {
                 val sourcePosition = viewHolder.bindingAdapterPosition
                 val targetPosition = target.bindingAdapterPosition
@@ -120,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                 dX: Float,
                 dY: Float,
                 actionState: Int,
-                isCurrentlyActive: Boolean
+                isCurrentlyActive: Boolean,
             ) {
                 RecyclerViewSwipeDecorator.Builder(
                     c,

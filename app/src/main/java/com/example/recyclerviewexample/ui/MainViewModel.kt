@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.recyclerviewexample.data.datasource.remote.GifsRemoteDataSourceImpl
-import com.example.recyclerviewexample.data.model.GifDto
-import com.example.recyclerviewexample.data.model.ItemGif
 import com.example.recyclerviewexample.data.network.RetrofitHelper
 import com.example.recyclerviewexample.data.repository.GifsRepositoryImpl
+import com.example.recyclerviewexample.domain.mapper.toUi
 import com.example.recyclerviewexample.domain.usecases.GetGifsUseCase
-import com.example.recyclerviewexample.ui.UiState
+import com.example.recyclerviewexample.ui.model.ItemGif
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,15 +25,16 @@ class MainViewModel(
         _uiState.value = UiState.Loading
         viewModelScope.launch {
             _uiState.value = try {
-                val response: GifDto = getGifsUseCase(typeOfGif = typeOfGif, limit = "25")
+                val response = getGifsUseCase(typeOfGif = typeOfGif, limit = "25").toUi()
                 if (response.metaResponse.status == 200) {
+                    // val result = response.toUi()
                     UiState.Success(gifList = response.dataResponse)
                 } else {
                     UiState.Error(error = response.metaResponse.msg)
                 }
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(error = e.message ?: "Unknown error")
-            } as UiState
+                UiState.Error(error = e.message ?: "Unknown error")
+            }
         }
     }
 

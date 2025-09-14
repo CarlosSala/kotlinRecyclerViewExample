@@ -3,7 +3,7 @@ package com.example.recyclerviewexample.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recyclerviewexample.data.model.ItemGif
+import com.example.recyclerviewexample.ui.model.ItemGif
 import com.example.recyclerviewexample.databinding.ItemGifBinding
 
 class GifViewHolder(view: View) : RecyclerView.ViewHolder(view) {

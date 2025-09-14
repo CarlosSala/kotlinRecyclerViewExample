@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerviewexample.R
-import com.example.recyclerviewexample.data.model.ItemGif
+import com.example.recyclerviewexample.ui.model.ItemGif
 
 class GifAdapter(
     private var itemGifList: List<ItemGif>,

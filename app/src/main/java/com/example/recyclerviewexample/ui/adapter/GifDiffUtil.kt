@@ -1,7 +1,7 @@
 package com.example.recyclerviewexample.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.recyclerviewexample.data.model.ItemGif
+import com.example.recyclerviewexample.ui.model.ItemGif
 
 class GifDiffUtil(
     private val oldList: List<ItemGif>,

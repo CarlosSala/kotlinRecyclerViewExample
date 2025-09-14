@@ -1,6 +1,6 @@
 package com.example.recyclerviewexample.ui
 
-import com.example.recyclerviewexample.data.model.ItemGif
+import com.example.recyclerviewexample.ui.model.ItemGif
 
 sealed class UiState {
     object Loading : UiState()

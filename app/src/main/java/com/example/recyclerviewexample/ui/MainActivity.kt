@@ -2,7 +2,6 @@ package com.example.recyclerviewexample.ui
 
 import android.graphics.Canvas
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,10 +14,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerviewexample.R
-import com.example.recyclerviewexample.data.model.ItemGif
 import com.example.recyclerviewexample.databinding.ActivityMainBinding
 import com.example.recyclerviewexample.ui.adapter.GifAdapter
-import com.example.recyclerviewexample.ui.UiState
+import com.example.recyclerviewexample.ui.model.ItemGif
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.launch
 

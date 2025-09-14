@@ -10,7 +10,7 @@ data class GifDto(
 
 data class Meta(
     val msg: String,
-    val responseId: String,
+    val responseId: String?,
     val status: Int
 )
 

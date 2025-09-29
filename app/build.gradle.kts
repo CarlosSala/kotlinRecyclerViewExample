@@ -68,7 +68,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-
+    // glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
 
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")

@@ -5,6 +5,8 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -70,8 +72,6 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     // glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
-
-    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
@@ -83,4 +83,9 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.11.0")
     // Fragment
     implementation("androidx.fragment:fragment-ktx:1.8.9")
+    // swipedecorator
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+    // hilt compiler
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    ksp("com.google.dagger:hilt-android-compiler:2.57.2")
 }

@@ -2,8 +2,9 @@ package com.example.recyclerviewexample.domain.usecases
 
 import com.example.recyclerviewexample.data.repository.GifsRepository
 import com.example.recyclerviewexample.domain.model.Gif
+import javax.inject.Inject
 
-class GetGifsUseCase(
+class GetGifsUseCase @Inject constructor(
     private val gifsRepository: GifsRepository,
 ) {
 

@@ -4,11 +4,11 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,23 +18,22 @@ import com.example.recyclerviewexample.R
 import com.example.recyclerviewexample.databinding.ActivityMainBinding
 import com.example.recyclerviewexample.ui.adapter.GifAdapter
 import com.example.recyclerviewexample.ui.model.ItemGif
+import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var gifAdapter: GifAdapter
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val viewModelFactory = MainViewmodelFactory()
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         gifAdapter = GifAdapter(emptyList()) { gif ->
             onItemSelected(gif)

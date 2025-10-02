@@ -1,18 +1,19 @@
 package com.example.recyclerviewexample.ui.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.recyclerviewexample.data.util.DataComponents
 import com.example.recyclerviewexample.domain.mapper.toUi
 import com.example.recyclerviewexample.domain.usecases.GetGifsUseCase
 import com.example.recyclerviewexample.ui.model.ItemGif
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getGifsUseCase: GetGifsUseCase,
 ) : ViewModel() {
 
@@ -59,15 +60,5 @@ class MainViewModel(
                 currentUiState
             }
         }
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-class MainViewmodelFactory() : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(getGifsUseCase = DataComponents.gifsUseCase) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
